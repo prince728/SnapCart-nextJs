@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
             })
         }
 
-        const existingUserByEmail = await userModel.findOne(email);
+        const existingUserByEmail = await userModel.findOne({ email });
 
         if (existingUserByEmail) {
             return NextResponse.json({
@@ -26,7 +26,14 @@ export async function POST(req: NextRequest) {
             })
         }
 
-        const hashedPassword = bcrypt.hash(password, 10);
+        if (password.length < 6) {
+            return NextResponse.json(
+                { message: "Password must be at least 8 characters" },
+                { status: 400 }
+            );
+        }
+        
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await userModel.create({
             name,
