@@ -7,10 +7,10 @@ if (!mongooseURI) {
     throw new Error("db secret key is missing");
 }
 
-const cache = global.mongoose
+let cache = global.mongoose
 
 if (!cache) {
-    cache: global.mongoose = { connection: null, promise: null }
+    cache = global.mongoose = { connection: null, promise: null }
 }
 
 export async function connectDB() {
