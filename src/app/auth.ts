@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { error } from "console";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -38,9 +39,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 };
 
             }
+        }),
+        Google({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         })
     ],
     callbacks: {
+        async signIn({ user, account }) {
+            if (account?.provider === "google") {
+                await connectDB();
+                const existingUser = await userModel.findOne({ email: user.email });
+
+                if (!existingUser) {
+                    const newUser = await userModel.create({
+                        name: user.name,
+                        email: user.email,
+                        image: user.image
+                    });
+                }
+
+                user.id =  existingUser._id.toString();
+                user.role = existingUser.role;
+            }
+            return true;
+        },
+
         jwt({ token, user }) {
             if (user) {
                 token.id = user.id,
@@ -54,22 +78,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session({ token, session }) {
             if (session.user) {
                 session.user.id = token.id as string,
-                session.user.email = token.email as string,
-                session.user.name = token.name as string,
-                session.user.role = token.role as string
+                    session.user.email = token.email as string,
+                    session.user.name = token.name as string,
+                    session.user.role = token.role as string
             }
 
             return session
         },
     },
-    pages:{
-        signIn:"/login",
-        error:"/login"
+    pages: {
+        signIn: "/login",
+        error: "/login"
     },
-    session:{
-        strategy:"jwt",
-        maxAge:10*24*60*60
+    session: {
+        strategy: "jwt",
+        maxAge: 10 * 24 * 60 * 60
     },
-    secret:process.env.AUTH_SECRET
+    secret: process.env.AUTH_SECRET
 
 })

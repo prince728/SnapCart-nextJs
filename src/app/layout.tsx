@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Provider from "@/provider";
 
 
 export const metadata: Metadata = {
@@ -10,8 +11,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body>
-        {children}
+      <body className=" w-full min-h-screen bg-linear-to-b from-green-200 to-white">
+        <Provider>
+          {children}
+        </Provider>
       </body>
     </html>
   );

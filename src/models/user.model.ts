@@ -4,9 +4,10 @@ interface User {
     _id?: mongoose.Types.ObjectId
     name: string
     email: string
-    password: string
+    password?: string
     mobile?: string
-    role: "user" | "deliveryBoy" | "admin"
+    role: "user" | "deliveryBoy" | "admin",
+    image?: string
 
 }
 
@@ -17,7 +18,7 @@ const userSchema = new mongoose.Schema<User>({
     },
     password: {
         type: String,
-        required: [true, "password is required"]
+        required: false
     },
     email: {
         type: String,
@@ -32,6 +33,10 @@ const userSchema = new mongoose.Schema<User>({
         type: String,
         enum: ["user", "deliveryBoy", "admin"],
         default: "user"
+    },
+    image: {
+        type: String,
+        required: false
     }
 
 }, {
