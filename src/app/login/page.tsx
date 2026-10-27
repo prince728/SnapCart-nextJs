@@ -32,12 +32,13 @@ const Login = () => {
                 password,
                 redirect: false,
             })
-
+            
+            
             if (result?.error) {
                 setError('Invalid email or password.')
                 return
             }
-
+            
             router.push('/')
             router.refresh()
         } catch (err) {
@@ -130,7 +131,7 @@ const Login = () => {
                 </div>
 
                 <button
-                    onClick={() => signIn('google')}
+                    onClick={() => signIn('google',{callbackUrl: '/'})}
                     type="button"
                     className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-100 transition-colors flex items-center justify-center gap-4"
                 >

@@ -30,7 +30,7 @@ const RegisterForm = ({ prevStep }: PropType) => {
         setError('')
         try {
             const response = await axios.post('/api/auth/register', { name, email, password })
-            console.log('User registered successfully:', response.data)
+            router.push("/login")
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 console.error('Server said:', err.response?.data)
@@ -138,7 +138,7 @@ const RegisterForm = ({ prevStep }: PropType) => {
                 </div>
 
                 <button
-                    onClick={() => signIn('google')}
+                    onClick={() => signIn('google',{callbackUrl: '/'})}
                     type="button"
                     className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-100 transition-colors flex items-center justify-center gap-4"
                 >
