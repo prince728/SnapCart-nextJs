@@ -5,11 +5,12 @@ import { auth } from "./auth";
 import { redirect } from "next/navigation";
 import { Edit } from "lucide-react";
 import EditRoleMobile from "@/components/EditRoleMobile";
+import Nav from "@/components/Nav";
+
 
 export default async function Home() {
   await connectDB();
   const session = await auth();
-  console.log("session", session);
   const user = await userModel.findById(session?.user?.id);
   if (!user) {
     redirect("/login")
@@ -21,8 +22,13 @@ export default async function Home() {
     return <EditRoleMobile />
   }
 
+  const PlainUser = JSON.parse(JSON.stringify(user));
+
+
 
   return (
-    <div></div>
+    <div>
+      <Nav user={PlainUser}/>
+    </div>
   );
 }
